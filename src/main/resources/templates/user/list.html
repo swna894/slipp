@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/config :: configFragment"></head>
+
+<body>
+	<header th:replace="fragments/header :: headerFragment"></header>
+
+	<div class="container">
+		<table class="table table-condensed">
+			<caption>사용자목록</caption>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>사용자 아이디</th>
+					<th>이름</th>
+					<th>이메일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user: ${users}">
+					<td th:text="${userStat.count}"></td>
+					<td th:text="${user.userId}"></td>
+					<td th:text="${user.name}">2222</td>
+					<td th:text="${user.email}">3333</td>
+					<td><a th:href="@{|/users/${user.id}/form|}"
+						class="btn btn-success" role="button">수정</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<footer th:replace="fragments/footer:: footerFragment"></footer>
+
+</body>
+</html>
