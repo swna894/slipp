@@ -57,14 +57,13 @@
 												class="article-author-thumb" alt="">
 										</div>
 										<div class="article-header-text">					
-											<a href="/users/1/자바지기"  th:text="*{answers[__${stat.index}__].writer.userId}"class="article-author-name">자바지기</a>
+											<a href="/users/1/자바지기"  th:text="*{answers[__${stat.index}__].writer.userId}"class="article-author-name">답변작성자</a>
 											<a href="#answer-1434" th:text="*{#temporals.format(answers[__${stat.index}__].createDate, 'dd-MM-yyyy HH:mm')}" class="article-header-time"
-												title="퍼머링크"> 2016-01-12 14:06 </a>
+												title="퍼머링크"> 작성시간 </a>
 										</div>
 									</div>
 									<div  class="article-doc comment-doc">
-										<p th:text="*{answers[__${stat.index}__].contents}">이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄
-											수도 있겠다.</p>
+										<p th:text="*{answers[__${stat.index}__].contents}">답변내역 </p>
 									</div>
 									<div class="article-util">
 										<ul class="article-util-list">

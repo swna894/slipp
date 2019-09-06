@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class Question {
 	@JoinColumn(foreignKey = @ForeignKey(name="fn_question_writer"))
 	private User writer;
 
-	@OneToMany(mappedBy="question")
+	@OneToMany(mappedBy="question", fetch = FetchType.EAGER, cascade = { javax.persistence.CascadeType.ALL })
 	@OrderBy("id ASC")
 	private List<Answer> answers;
 	

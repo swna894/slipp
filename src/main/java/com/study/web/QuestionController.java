@@ -20,6 +20,7 @@ import com.study.model.User;
 @RequestMapping("/questions")
 public class QuestionController {
 
+	private static final String ERROR_MESSAGE_LOGIN = "로그인이 필요합니다.";
 	@Autowired
 	QuestionRepository questionRepository;
 
@@ -41,15 +42,12 @@ public class QuestionController {
 	
 	@PutMapping("/{id}")
 	public String update(@PathVariable Long id, String title, String contents, Model model, HttpSession session) {
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/user/login";
-		}
 		
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		Question question = questionRepository.findById(id).orElse(new Question());
-		if(!question.isSameWriter(loginUser)) {
+		if (!hasPermission(session, question)) {
+			model.addAttribute("error", ERROR_MESSAGE_LOGIN);
 			return "/user/login";
-		}
+		}		
 		question.update(title, contents);
 		questionRepository.save(question);
 		
@@ -58,24 +56,20 @@ public class QuestionController {
 	
 	@GetMapping("/{id}/form")
 	public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/user/login";
-		}
-		
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		Question question = questionRepository.findById(id).orElse(new Question());
-		if(!question.isSameWriter(loginUser)) {
+		if (!hasPermission(session, question)) {
+			model.addAttribute("error", ERROR_MESSAGE_LOGIN);
 			return "/user/login";
-		}
+		}	
 	
-		
 		model.addAttribute("question", question);
 		return "/qna/updateForm";
 	}
 
 	@PostMapping("")
-	public String cerate(String title, String contents, HttpSession session) {
+	public String cerate(String title, String contents, Model model, HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
+			model.addAttribute("error", ERROR_MESSAGE_LOGIN);
 			return "/user/login";
 		}
 
@@ -89,16 +83,23 @@ public class QuestionController {
 	
 	@DeleteMapping("/{id}")
 	public String delete(@PathVariable Long id, Model model, HttpSession session) {
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/user/login";
-		}
-		
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		Question question = questionRepository.findById(id).orElse(new Question());
-		if(!question.isSameWriter(loginUser)) {
+		if (!hasPermission(session, question)) {
+			model.addAttribute("error", ERROR_MESSAGE_LOGIN);
 			return "/user/login";
-		}
+		}	
 		questionRepository.deleteById(id);
 		return "redirect:/";
+	}
+	
+	private boolean hasPermission(HttpSession session, Question question) {
+		if (!HttpSessionUtils.isLoginUser(session)) {
+			return false;
+		}		
+		User loginUser = HttpSessionUtils.getUserFromSession(session);
+		if(!question.isSameWriter(loginUser)) {
+			return false;
+		}	
+		return true;
 	}
 }
